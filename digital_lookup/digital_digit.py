@@ -65,8 +65,7 @@ def see_number(img):
 
     image = cv.resize(img, (500, 500))
     gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
-    ret, thresh = cv.threshold(gray, 142.0, 255, type=cv.THRESH_BINARY)
-    ret, thresh = cv.threshold(thresh, 10, 255, type=cv.THRESH_BINARY)
+    ret, thresh = cv.threshold(gray, 142.0, 255, type=cv.THRESH_BINARY + cv.THRESH_OTSU)
     thresh = cv.blur(thresh, (7, 7))
     ret, thresh = cv.threshold(thresh, 250, 255, type=cv.THRESH_BINARY)
     thresh = cv.erode(thresh, (5, 5), iterations=15)
