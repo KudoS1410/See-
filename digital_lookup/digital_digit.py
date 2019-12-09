@@ -8,7 +8,7 @@ def get_images():
     folder = os.getcwd()
     for file in os.listdir(folder):
         file_name, file_ext = os.path.splitext(file)
-        if file_ext == '.jpg':
+        if file_ext == '.jpg' and file_name != 'img7':
             image = cv.imread(file)
             images.append(image)
     return images
@@ -22,12 +22,12 @@ def read_digit(roi, DIGITS_LOOKUP):
     h = roiH
 
     segments = [
-        ((0, 0), (w, dH)),  # top
-        ((0, dH), (dW, h // 2)),  # top-left
-        ((w - dW, dH), (w, h // 2)),  # top-right
+        ((dW, 0), (w - dW, dH)),  # top
+        ((0, dH), (dW, (h // 2) - dHC)),  # top-left
+        ((w - dW, dH), (w, (h // 2) - dHC)),  # top-right
         ((dW, (h // 2) - dHC), (w - dW, (h // 2) + dHC)),  # center
-        ((0, h // 2), (dW, h)),  # bottom-left
-        ((w - dW, h // 2), (w, h)),  # bottom-right
+        ((0, (h // 2) + dHC), (dW, h - dH)),  # bottom-left
+        ((w - dW, (h // 2) + dHC), (w, h - dH)),  # bottom-right
         ((dW, h - dH), (w - dW, h))  # bottom
     ]
     on = [0] * len(segments)
@@ -66,6 +66,7 @@ def see_number(img):
     image = cv.resize(img, (500, 500))
     gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
     ret, thresh = cv.threshold(gray, 142.0, 255, type=cv.THRESH_BINARY + cv.THRESH_OTSU)
+    # ret, thresh = cv.threshold(thresh, 10, 255, type=cv.THRESH_BINARY)
     thresh = cv.blur(thresh, (7, 7))
     ret, thresh = cv.threshold(thresh, 250, 255, type=cv.THRESH_BINARY)
     thresh = cv.erode(thresh, (5, 5), iterations=15)
